@@ -4,3 +4,24 @@
     flex-direction: row;
     justify-content: space-between;
 }
+
+.container {
+    margin: 80px auto 0;
+    width: 100%;
+}
+
+.table-container {
+    margin: 0px auto 0;
+    width: 100%;
+    background-color: white;
+}
+
+.buttons-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+thead tr th {
+    text-align: center;
+}

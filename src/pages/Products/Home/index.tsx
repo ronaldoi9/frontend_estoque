@@ -1,40 +1,24 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { Table, Button } from 'react-bootstrap'
 import { useHistory } from 'react-router-dom'
+import { useSelector, useDispatch } from 'react-redux'
 
+import { Product } from '../../../domain/product'
+import { ProductState } from '../../../store/product/productReducer'
+import { deleteProduct } from '../../../store/product/actions'
 import api from '../../../services/api'
-import './index.css'
 
-interface Product {
-    id: number
-    name: string
-    quantity: number
-    price: number
-}
+import './index.css'
+import { ProductRow } from '../../../components/ProductRow'
 
 const Products: React.FC = () => {
 
-    const [products, setProducts] = useState<Product[]>([])
+    const products = useSelector<ProductState, ProductState["products"]>( state => state.products )
+    const onDeleteProduct = (product: Product) => {
+        dispatch(deleteProduct(product))
+    }
+    const dispatch = useDispatch()
     const history = useHistory()
-
-    useEffect(() => {
-        loadProducts()
-    }, [])
-
-    async function loadProducts(): Promise<void> {
-        const response = await api.get('/product')
-        setProducts(response.data.items)
-    }
-
-    async function deleteProduct(id: Number) {
-        await api.delete(`/product/${id}`)
-        loadProducts()
-    }
-
-
-    function formatPrice(price: Number): String {
-        return price.toFixed(2)
-    }
 
     function createProduct() {
         history.push('/product')
@@ -44,6 +28,11 @@ const Products: React.FC = () => {
         history.push(`/product/${id}`)
     }
 
+    async function delProduct(product: Product): Promise<void> {
+        await api.delete(`/products/${product.id}`)
+        onDeleteProduct(product)
+    }
+    
     return (
         <div className="container">
             <br/>
@@ -52,7 +41,7 @@ const Products: React.FC = () => {
                     <Button variant="dark" size="sm" onClick={createProduct}>Adicionar</Button>
                 </div>
             <br/>
-            <Table striped bordered hover className="text-center">
+            <Table striped bordered hover className="table-container">
                 <thead>
                     <tr>
                         <th>#</th>
@@ -65,17 +54,12 @@ const Products: React.FC = () => {
                 <tbody>
                     {
                         products.map( (product, index) => (
-                            <tr key={index}>
-                                <td>{ index + 1 }</td>
-                                <td>{ product.name }</td>
-                                <td>{ product.quantity }</td>
-                                <td>R${ formatPrice(product.price) }</td>
-                                <td>
-                                    <Button size="sm" variant="success" onClick={() => editProduct(product.id)}>Editar</Button>{' '}
-                                    <Button size="sm" variant="danger" onClick={() => deleteProduct(product.id)}>Deletar</Button>{' '}
-                                    <Button size="sm" variant="info">Visualizar</Button>{' '}
-                                </td>
-                            </tr>
+                            <ProductRow 
+                            product={product}
+                            position={index}
+                            onClickDelete={delProduct}
+                            onClickEdit={editProduct}
+                            />
                         ))
                     }
                 </tbody>

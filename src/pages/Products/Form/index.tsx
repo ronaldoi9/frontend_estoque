@@ -1,22 +1,29 @@
 import React, { useState, useEffect, ChangeEvent } from 'react'
 import { useHistory, useParams } from 'react-router-dom'
 import { Button, Form } from 'react-bootstrap'
+import { useDispatch } from 'react-redux'
 
 import api from '../../../services/api'
-
-interface Product {
-    name: string
-    quantity: number
-    price: number
-}
+import { Product } from '../../../domain/product'
+import { addProduct, updateProduct } from '../../../store/product/actions'
+import { parseToProduct } from '../../../utils/parse-to-product'
+import { NameField, QuantityField, PriceField } from '../../../components/FormField'
 
 const ProductForm: React.FC = () => {
 
-    const [ model, setModel ] = useState<Product>({
+    const [ model, setModel ] = useState<Omit<Product, "id">>({
         name: '',
         quantity: 0,
         price: 0
     })
+    const dispatch = useDispatch()
+    const onAddProduct = (product: Product) => {
+        dispatch(addProduct(product))
+    }
+    const onUpdateProduct = (product: Product) => {
+        dispatch(updateProduct(product))
+    }
+
     const history = useHistory()
     const params: any = useParams()
 
@@ -39,16 +46,20 @@ const ProductForm: React.FC = () => {
     async function onSubmit(e: ChangeEvent<HTMLFormElement>) {
         e.preventDefault()
 
+        let product: Product
         if (!isEmpty(params)){
-            await api.put(`/product/${params.id}`, model)
+            product = (await api.put<Product>(`/products/${params.id}`, model)).data
+            onUpdateProduct(parseToProduct(product))
+
         }else{
-            await api.post('/product', model)
+            product = (await api.post<Product>('/products', model)).data
+            onAddProduct(parseToProduct(product))
         }
         back()
     }
 
     async function findProduct(params: any) {
-        const response = await api.get(`/product/${params.id}`)
+        const response = await api.get(`/products/${params.id}`)
         setModel({
             name: response.data.name,
             quantity: response.data.quantity,
@@ -69,37 +80,18 @@ const ProductForm: React.FC = () => {
                 </div>
             <br/>
             <Form onSubmit={onSubmit}>
-                <Form.Group controlId="productName">
-                    <Form.Label>Nome</Form.Label>
-                    <Form.Control
-                        type="text" 
-                        name="name"
-                        value={model.name}
-                        placeholder="Insira o nome do Produto" 
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => updateModel(e)} 
-                    />
-                </Form.Group>
-
-                <Form.Group controlId="productQuantity">
-                    <Form.Label>Quantidade</Form.Label>
-                    <Form.Control 
-                        placeholder="Insira a quantidade"
-                        name="quantity"
-                        value={model.quantity}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => updateModel(e)} 
-                    />
-                </Form.Group>
-
-                <Form.Group controlId="productPrice">
-                    <Form.Label>Preço</Form.Label>
-                    <Form.Control 
-                        placeholder="Insira o preço"
-                        name="price"
-                        value={model.price}
-                        onChange={(e: ChangeEvent<HTMLInputElement>) => updateModel(e)} 
-                    />
-                </Form.Group>
-
+                <NameField
+                    name={model.name}
+                    getEvent={updateModel}
+                />
+                <QuantityField
+                    quantity={model.quantity}
+                    getEvent={updateModel}
+                />
+                <PriceField
+                    price={model.price}
+                    getEvent={updateModel}
+                />
                 <Button variant="primary" type="submit">
                     Adicionar
                 </Button>
