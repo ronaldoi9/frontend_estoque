@@ -20,7 +20,7 @@ interface PriceProps extends Event {
 export const NameField: React.FC<NameProps> = (props: NameProps)=> {
     return(
         <Form.Group controlId="productName">
-            <Form.Label>Nome</Form.Label>
+            <Form.Label><b>Nome</b></Form.Label>
             <Form.Control
                 type="text" 
                 name="name"
@@ -35,7 +35,7 @@ export const NameField: React.FC<NameProps> = (props: NameProps)=> {
 export const QuantityField: React.FC<QuantityProps> = (props: QuantityProps)=> {
     return(
         <Form.Group controlId="productQuantity">
-            <Form.Label>Quantidade</Form.Label>
+            <Form.Label><b>Quantidade</b></Form.Label>
             <Form.Control 
                 placeholder="Insira a quantidade"
                 name="quantity"
@@ -49,7 +49,7 @@ export const QuantityField: React.FC<QuantityProps> = (props: QuantityProps)=> {
 export const PriceField: React.FC<PriceProps> = (props: PriceProps)=> {
     return(
         <Form.Group controlId="productPrice">
-            <Form.Label>Preço</Form.Label>
+            <Form.Label><b>Preço</b></Form.Label>
             <Form.Control 
                 placeholder="Insira o preço"
                 name="price"
