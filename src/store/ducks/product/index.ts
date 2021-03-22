@@ -1,5 +1,6 @@
-import { Action, ProductAction, ProductActionType } from "./actions"
-import { Product } from "../../domain/product"
+import { ProductActionType } from './types'
+import { Action, ProductAction } from './actions'
+import { Product } from "../../../domain/product"
 
 export interface ProductState {
   products: Product[]

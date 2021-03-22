@@ -1,27 +1,20 @@
-import { Product } from "../../domain/product"
+import { Product } from '../../../domain/product'
+import { ProductActionType } from './types'
 
 type ActionMap<T extends { [index: string]: any }> = {
   [K in keyof T]: T[K] extends undefined
     ? { type: K }
     : { type: K; payload: T[K] }
-};
+}
 
 export type Action<T> = ActionMap<T>[keyof ActionMap<T>]
 
-export enum ProductActionType {
-  ADD_PRODUCT = 'ADD_PRODUCT',
-  UPDATE_PRODUCT = 'UPDATE_PRODUCT',
-  DELETE_PRODUCT = 'DELETE_PRODUCT',
-  LOAD_PRODUCTS = 'LOAD_PRODUCTS',
-}
-
 export type ProductAction = {
-    [ProductActionType.ADD_PRODUCT]: { product: Product }
-    [ProductActionType.DELETE_PRODUCT]: { product: Product }
-    [ProductActionType.UPDATE_PRODUCT]: { product: Product }
-    [ProductActionType.LOAD_PRODUCTS]: { products: Product[] 
-  }
-};
+  [ProductActionType.ADD_PRODUCT]: { product: Product }
+  [ProductActionType.DELETE_PRODUCT]: { product: Product }
+  [ProductActionType.UPDATE_PRODUCT]: { product: Product }
+  [ProductActionType.LOAD_PRODUCTS]: { products: Product[] }
+}
 
 export const addProduct = (product: Product): Action<ProductAction> => ({
   type: ProductActionType.ADD_PRODUCT,
