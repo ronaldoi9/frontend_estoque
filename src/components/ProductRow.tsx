@@ -15,8 +15,8 @@ function formatPrice(price: Number): String {
 
 export const ProductRow: React.FC<Props> = (props: Props)=> {
     return(
-        <tr key={Math.random() * Number.MAX_SAFE_INTEGER}>
-            <td>{ props.position }</td>
+        <tr key={ props.position + 1 }>
+            <td>{ props.position + 1 }</td>
             <td>{ props.product.name }</td>
             <td>{ props.product.quantity }</td>
             <td>R${ formatPrice(props.product.price) }</td>
