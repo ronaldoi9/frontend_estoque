@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 
 import api from '../../../services/api'
 import { Product } from '../../../domain/product'
-import { addProduct, updateProduct } from '../../../store/product/actions'
+import { addProduct, updateProduct } from '../../../store/ducks/product/actions'
 import { parseToProduct } from '../../../utils/parse-to-product'
 import { NameField, QuantityField, PriceField } from '../../../components/FormField'
 

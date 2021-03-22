@@ -4,8 +4,8 @@ import { useHistory } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { Product } from '../../../domain/product'
-import { ProductState } from '../../../store/product/productReducer'
-import { deleteProduct } from '../../../store/product/actions'
+import { ProductState } from '../../../store/ducks/product'
+import { deleteProduct } from '../../../store/ducks/product/actions'
 import api from '../../../services/api'
 
 import './index.css'
